@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block titre %}Ajouter une nouvelle réunion{% endblock %}
+
+{% block contenu %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+        <h2 class="mb-4">➕ Ajouter une nouvelle réunion</h2>
+
+        <!-- ─── Affichage des erreurs de validation ─── -->
+        {% if erreurs %}
+        <div class="alert alert-danger">
+            <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+            <ul class="mb-0 mt-2">
+                {% for erreur in erreurs %}
+                <li>{{ erreur }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- ─── Le formulaire ─── -->
+        <!-- action="" = envoyer les données au MÊME URL (/ajouter) -->
+        <!-- method="post" = utiliser la méthode POST (données non visibles dans l'URL) -->
+        <form action="" method="post" novalidate>
+        <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
+
+            <!-- Champ Titre -->
+            <div class="mb-3">
+                <label for="titre" class="form-label fw-semibold">
+                    Titre / Objet de la réunion <span class="text-danger">*</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="titre"
+                    name="titre"
+                    placeholder="Ex : Assemblée Générale Ordinaire 2026"
+                    maxlength="200"
+                >
+                <!-- name="titre" DOIT correspondre exactement à request.form.get("titre") dans Flask -->
+                <div class="form-text">Maximum 200 caractères</div>
+            </div>
+
+            <!-- Champ Date de la réunion -->
+            <div class="mb-3">
+                <label for="date" class="form-label fw-semibold">
+                    Date de la réunion <span class="text-danger">*</span>
+                </label>
+                <input
+                    type="date"
+                    class="form-control"
+                    id="date"
+                    name="date"
+                    placeholder="Ex : 2026-06-27"
+                >
+            </div>
+
+            <!-- Champ Heure -->
+            <div class="mb-4">
+                <label for="heure" class="form-label fw-semibold">
+                    Heure de début
+                    <span class="text-muted fw-normal">(optionnel)</span>
+                </label>
+                <input
+                    type="time"
+                    class="form-control"
+                    id="heure"
+                    name="heure"
+                    placeholder="Ex : 18:30"
+                >
+            </div>
+
+
+            <!-- Champ Lieu -->
+            <div class="mb-4">
+                <label for="lieu" class="form-label fw-semibold">
+                    Lieu
+                    <span class="text-muted fw-normal">(optionnel)</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="lieu"
+                    name="lieu"
+                    placeholder="Ex: Salle polyvalente, Mairie "
+                    maxlength="200"
+                >
+                <div class="form-text">Maximum 200 caractères</div>
+            </div>
+
+            <!-- Champ Type réunion -->
+            <div class="mb-3">
+                <label for="type_reunion" class="form-label fw-semibold">
+                    Type de réunion <span class="text-danger">*</span>
+                </label>
+                <select id="type_reunion" name="type_reunion">
+                    <option value="ordinaire">Ordinaire</option>
+                    <option value="extra">Extraordinaire</option>
+                </select>         
+            
+            </div>
+
+            <!-- Champ Ordre du jour -->
+            <div class="mb-3">
+                <label for="ordre" class="form-label fw-semibold">
+                    Ordre du jour
+                    <span class="text-muted fw-normal">(optionnel)</span>
+                </label>
+                <textarea 
+                id="ordre" 
+                name="ordre" 
+                rows="5" 
+                cols="40" 
+                placeholder="Ex: 1. Bilan financier 2. Élections 3. Divers..."
+               >
+                </textarea>
+       
+            
+            </div>
+
+            <!-- Champ Nom du président de séance -->
+            <div class="mb-3">
+                <label for="president" class="form-label fw-semibold">
+                    Nom du président de séance 
+                    <span class="text-muted fw-normal">(optionnel)</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="president"
+                    name="president"
+                    placeholder="Ex : Mme Fatima Bensaid"
+                    maxlength="150"
+                >
+                <!-- name="president" DOIT correspondre exactement à request.form.get("president") dans Flask -->
+                <div class="form-text">Maximum 150 caractères</div>
+            </div>
+
+            <!-- Champ Nom du secrétaire de séance -->
+            <div class="mb-3">
+                <label for="secretaire" class="form-label fw-semibold">
+                    Nom du secrétaire de séance 
+                    <span class="text-danger">*</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="secretaire"
+                    name="secretaire"
+                    placeholder="Ex : M. Karim Toumi"       
+                    maxlength="150"
+                >
+                <!-- name="secretaire" DOIT correspondre exactement à request.form.get("secretaire") dans Flask -->
+                <div class="form-text">Maximum 150 caractères</div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                    💾 Enregistrer la réunion
+                </button>
+                <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary">
+                    ← Annuler et retourner à la liste
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

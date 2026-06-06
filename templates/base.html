@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le titre de l'onglet du navigateur change selon la page -->
+    <!-- block titre = emplacement réservé que chaque page va remplir -->
+    <title>Meeting — {% block titre %}{% endblock %}</title>
+
+    <!-- Bootstrap 5 via CDN — pas besoin de télécharger quoi que ce soit -->
+    <!-- CDN = Content Delivery Network = un serveur distant qui héberge Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    >
+
+    <!-- Tes styles CSS personnalisés — chargés après Bootstrap pour les surcharger -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- url_for('static', ...) = Flask génère automatiquement le bon chemin vers ton fichier static -->
+</head>
+<body>
+
+    <!-- ═══════════════════════════════ NAVIGATION ═══════════════════════════════ -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+
+            <!-- Logo/Nom de l'app — cliquable → retour à l'accueil -->
+            <a class="navbar-brand fw-bold" href="{{ url_for('accueil') }}">
+                👥 PV de Réunion
+            </a>
+        </div>
+    </nav>
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Zone principale — chaque page remplit cet espace -->
+    <main class="container pb-5">
+
+        <!-- ici chaque page enfant injecte son propre contenu -->
+        {% block contenu %}{% endblock %}
+
+    </main>
+
+    <!-- Footer commun à toutes les pages -->
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <small>Rédaction de PV de Réunion — Application Flask</small>
+    </footer>
+
+    <!-- Bootstrap JS — nécessaire pour les composants interactifs (dropdown, modal..) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
