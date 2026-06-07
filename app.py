@@ -1,10 +1,10 @@
-# app.py — version complète après l'étape 5
+# app.py 
 
 from flask import Flask, render_template, redirect, url_for, request
+# render_template = la fonction qui fusionne un fichier HTML avec des données
 from database import get_connection
 from datetime import datetime
-# render_template = la fonction qui fusionne un fichier HTML avec des données
-
+# validation côté serveur - Champs Date et Heure
 app = Flask(__name__)
 
 @app.route("/")
@@ -51,7 +51,7 @@ def accueil():
     return render_template("index.html", meetings=reunions)
     # render_template va chercher "index.html" dans le dossier templates/
     # meetings=reunions: on passe la liste de réunions au template
-    # Dans le template on pourra utiliser {{ meetings }} ou faire un {% for l in meetings %}
+    # Dans le template on pourra utiliser {{ meetings }} ou faire un {% for meeting in meetings %}
 
 
 # ─── Route ajouter — gère GET (afficher le formulaire) ET POST (traiter les données) ───
@@ -61,9 +61,10 @@ def nouvelle():
     # Sans ça Flask n'accepte que GET par défaut
 
     erreurs = []
-    heure_val = None # Contiendra l'objet date pour MySQL
-    date_val = None  # Contiendra l'objet date pour MySQL
     # Liste pour collecter les messages d'erreur de validation
+
+    date_val = None  # Contiendra l'objet date pour MySQL
+    heure_val = None # Contiendra l'objet date pour MySQL
 
     if request.method == "POST":
         # ──────────────────────────────────────────────
@@ -98,8 +99,10 @@ def nouvelle():
 
         if not date_saisie:
             erreurs.append("La date de la réunion est obligatoire.")
+            # Exécté si l'utilisateur n'a rien mis
         else:
             try:
+                # Si l'utilisateur met quelque chose
                 # On tente de convertir la chaîne "AAAA-MM-JJ" en objet date
                 # %Y = Année sur 4 chiffres, %m = Mois (01 à 12), %d = Jour (01 à 31)
                 date_val = datetime.strptime(date_saisie, "%Y-%m-%d").date()
@@ -107,7 +110,7 @@ def nouvelle():
                 # Si la date n'existe pas (ex: 2026-02-31) ou si le format est altéré
                 erreurs.append("La date saisie n'est pas valide (format attendu : AAAA-MM-JJ).")
 
-        if heure:  # Si l'heure a été saisie (car elle est optionnelle)
+        if heure: 
             try:
                 # On tente de convertir la chaîne "HH:MM" en objet time
                 # %H = heure (00 à 23), %M = minute (00 à 59)
@@ -115,7 +118,8 @@ def nouvelle():
             except ValueError:
                 # Si Python lève une erreur, le format ou les chiffres sont faux
                 erreurs.append("L'heure saisie n'est pas valide (format attendu : HH:MM).")
-
+        # L'heure est optionnelle
+        # Si l'heure n'a été saisie heure_val reste à none
         
         if len(lieu) > 200:
             erreurs.append("Le lieu ne peut pas dépasser 200 caractères.")
@@ -170,7 +174,23 @@ def nouvelle():
     # ──────────────────────────────────────────────
     return render_template("nouvelle.html", erreurs=erreurs)
 
+# ───────────────────────────────────────────────────────
+# ROUTE 3 : Détail d'un livre
+# URL : GET /detail/<id>
+# ───────────────────────────────────────────────────────
+@app.route("/reunion/<int:reunion_id>")
+def reunion(reunion_id):
+    conn   = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
+    reunion_recup  = cursor.fetchone()
+    cursor.close()
+    conn.close()
 
+    if reunion_recup is None:
+        return render_template("404.html"), 404
+
+    return render_template("seance.html", meeting=reunion_recup)
 
 if __name__ == "__main__":
     app.run(debug=True)
