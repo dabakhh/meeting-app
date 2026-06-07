@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block titre %}{{ meeting.titre }}{% endblock %}
+
+{% block contenu %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        
+        <!-- Bouton retour en haut -->
+        <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary mb-4">
+            ← Retour à la liste
+        </a>
+        
+        <!-- Carte de détail de la réunion -->
+        <div class="card shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="mb-0">📘 {{ meeting.titre }} ({{ meeting.date_reunion }}) •  {{ meeting.lieu }} •  Réunion {{ meeting.type_reunion }} •  [ Statut: {{ meeting.statut }}]</h4>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

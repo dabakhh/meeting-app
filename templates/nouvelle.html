@@ -22,7 +22,7 @@
         {% endif %}
 
         <!-- ─── Le formulaire ─── -->
-        <!-- action="" = envoyer les données au MÊME URL (/ajouter) -->
+        <!-- action="" = envoyer les données au MÊME URL (/nouvelle) -->
         <!-- method="post" = utiliser la méthode POST (données non visibles dans l'URL) -->
         <form action="" method="post" novalidate>
         <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
@@ -97,8 +97,8 @@
                     Type de réunion <span class="text-danger">*</span>
                 </label>
                 <select id="type_reunion" name="type_reunion">
-                    <option value="ordinaire">Ordinaire</option>
-                    <option value="extra">Extraordinaire</option>
+                    <option value="Ordinaire">Ordinaire</option>
+                    <option value="Extraordinaire">Extraordinaire</option>
                 </select>         
             
             </div>
@@ -113,10 +113,12 @@
                 id="ordre" 
                 name="ordre" 
                 rows="5" 
-                cols="40" 
+                cols="60" 
+                class="form-control"
                 placeholder="Ex: 1. Bilan financier 2. Élections 3. Divers..."
-               >
-                </textarea>
+                style="resize: none;"
+                
+               ></textarea>
        
             
             </div>

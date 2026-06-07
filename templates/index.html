@@ -69,19 +69,19 @@
 
                     <td>
                         {% if meeting.statut=='en cours' %}
-                        <a href="{{ url_for('accueil', meeting_id=meetings.id) }}"
+                        <a href="{{ url_for('reunion', reunion_id=meeting.id) }}"
                            class="btn btn-sm btn-outline-secondary">
                             ✍️ Séance en cours
                         </a>
-                        <a href="{{ url_for('accueil', meeting_id=meetings.id) }}"
+                        <a href="{{ url_for('accueil', reunion_id=meeting.id) }}"  
                            class="btn btn-sm btn-outline-secondary">
                             📄 PV
-                        </a>
+                        </a> {# |||||||||| accueil sera remplacé par ajouter ||||||||||#}
                         {% else %}
-                        <a href="{{ url_for('accueil', meeting_id=meetings.id) }}"
+                        <a href="{{ url_for('accueil', reunion_id=meeting.id) }}"
                            class="btn btn-sm btn-outline-secondary">
                             📄 PV final
-                        </a>
+                        </a> {# |||||||||| accueil sera remplacé par ajouter |||||||||| #}
                         {% endif %}
 
                         

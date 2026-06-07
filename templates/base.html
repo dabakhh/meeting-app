@@ -6,7 +6,7 @@
 
     <!-- Le titre de l'onglet du navigateur change selon la page -->
     <!-- block titre = emplacement réservé que chaque page va remplir -->
-    <title>Meeting — {% block titre %}{% endblock %}</title>
+    <title>Meeting | {% block titre %}{% endblock %}</title>
 
     <!-- Bootstrap 5 via CDN — pas besoin de télécharger quoi que ce soit -->
     <!-- CDN = Content Delivery Network = un serveur distant qui héberge Bootstrap -->
@@ -16,8 +16,10 @@
     >
 
     <!-- Tes styles CSS personnalisés — chargés après Bootstrap pour les surcharger -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <!-- url_for('static', ...) = Flask génère automatiquement le bon chemin vers ton fichier static -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icone.png') }}" type="image/x-icon">
 </head>
 <body>
 
