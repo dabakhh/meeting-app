@@ -99,7 +99,7 @@ def nouvelle():
 
         if not date_saisie:
             erreurs.append("La date de la réunion est obligatoire.")
-            # Exécté si l'utilisateur n'a rien mis
+            # Exécuté si l'utilisateur n'a rien mis
         else:
             try:
                 # Si l'utilisateur met quelque chose
@@ -175,22 +175,85 @@ def nouvelle():
     return render_template("nouvelle.html", erreurs=erreurs)
 
 # ───────────────────────────────────────────────────────
-# ROUTE 3 : Détail d'un livre
-# URL : GET /detail/<id>
+# ROUTE 3 : Détail d'une reunion
+# URL : GET /reunion/<id>
 # ───────────────────────────────────────────────────────
 @app.route("/reunion/<int:reunion_id>")
 def reunion(reunion_id):
     conn   = get_connection()
     cursor = conn.cursor(dictionary=True)
+    # Première requête SELECT pour les reunions
     cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
     reunion_recup  = cursor.fetchone()
+    # Deuxième requête SELECT pour les présents
+    cursor.execute("SELECT * FROM participants WHERE reunion_id=%s", (reunion_id,))
+    presents = cursor.fetchall()
     cursor.close()
     conn.close()
 
     if reunion_recup is None:
         return render_template("404.html"), 404
 
-    return render_template("seance.html", meeting=reunion_recup)
+    return render_template("seance.html", reunion=reunion_recup, presents=presents)
+
+
+# ───────────────────────────────────────────────────────
+# ROUTE 4 : Ajouter présent
+# URL : GET /reunion/<id>
+# ───────────────────────────────────────────────────────
+@app.route('/reunion/<int:reunion_id>/present', methods=["POST"])
+def ajouter(reunion_id):
+
+    erreurs = []
+    fonction_val = None  # Contiendra la fonction pour MySQL
+
+    # ──────────────────────────────────────────────
+    # On est ici seulement si le formulaire a été soumis
+    # ──────────────────────────────────────────────
+
+     # Récupérer les données envoyées par le formulaire
+    prenom_present     = request.form.get("prenom", "").strip()
+    nom_present        = request.form.get("nom",  "").strip()
+    fonction           = request.form.get("fonction",  "").strip()
+
+    if not prenom_present:
+        erreurs.append("Le prénom est obligatoire.")
+    elif len(prenom_present) > 150:
+        erreurs.append("Le prénom ne peut pas dépasser 150 caractères.")
+
+    if not nom_present:
+        erreurs.append("Le nom est obligatoire.")
+    elif len(nom_present) > 50:
+        erreurs.append("Le nom ne peut pas dépasser 50 caractères.")
+
+
+
+        # ──────────────────────────────────────────────
+        # Si pas d'erreurs → insérer en base et rediriger
+        # ──────────────────────────────────────────────
+    if not erreurs:
+        conn   = get_connection()
+        cursor = conn.cursor()
+        
+        fonction_val = fonction if fonction else None
+        # Première requête SELECT pour les reunions
+        cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
+        reunion_recup  = cursor.fetchone()
+
+        cursor.execute("INSERT INTO participants (reunion_id, nom, prenom, fonction) VALUES (%s,%s,%s,%s)",
+                       (reunion_id, nom_present, prenom_present, fonction_val)
+                       )
+
+        conn.commit()
+        # OBLIGATOIRE — sans commit() l'INSERT ne sera pas sauvegardé
+
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("reunion", reunion_id=reunion_id))
+        
+    return render_template("seance.html", reunion=reunion_recup, errors=erreurs)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
