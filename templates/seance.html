@@ -43,25 +43,25 @@
     
     {% endif %}
     
-    <!-- ─── Affichage des erreurs de validation ─── -->
-    {% if errors %}
-    <div class="alert alert-danger">
-        <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
-        <ul class="mb-0 mt-2">
-            {% for err in errors %}
-            <li>{{ err }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
+    
     <div class="card shadow-sm my-4">
-            
-            <div class="card-header py-1">
-                <h4 class="text-center my-2">➕ Ajouter un participant</h4>
+        
+        <div class="card-header py-1">
+            <h4 class="text-center my-2">➕ Ajouter un participant</h4>
+        </div>
+        
+            <!-- ─── Affichage des erreurs de validation ─── -->
+            {% if errors %}
+            <div class="alert alert-danger">
+                <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+                <ul class="mb-0 mt-2">
+                    {% for err in errors %}
+                    <li>{{ err }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-            
-            
+            {% endif %}
+        
             <form novalidate class="m-4" method="post" action="{{ url_for('ajouter', reunion_id=reunion.id) }}">
             <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
              <!-- Champ Nom présent -->
