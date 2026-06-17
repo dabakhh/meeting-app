@@ -133,7 +133,7 @@ def nouvelle():
 
 
         if not secretaire:
-            erreurs.append("Le titre est obligatoire.")
+            erreurs.append("Le nom du secrétaire est obligatoire.")
         elif len(secretaire) > 150:
             erreurs.append("Le titre ne peut pas dépasser 150 caractères.")
 
@@ -227,7 +227,7 @@ def ajouter(reunion_id):
         erreurs.append("Le nom ne peut pas dépasser 50 caractères.")
 
 
-
+   
         # ──────────────────────────────────────────────
         # Si pas d'erreurs → insérer en base et rediriger
         # ──────────────────────────────────────────────
@@ -236,9 +236,7 @@ def ajouter(reunion_id):
         cursor = conn.cursor()
         
         fonction_val = fonction if fonction else None
-        # Première requête SELECT pour les reunions
-        cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
-        reunion_recup  = cursor.fetchone()
+        
 
         cursor.execute("INSERT INTO participants (reunion_id, nom, prenom, fonction) VALUES (%s,%s,%s,%s)",
                        (reunion_id, nom_present, prenom_present, fonction_val)
@@ -251,8 +249,15 @@ def ajouter(reunion_id):
         conn.close()
 
         return redirect(url_for("reunion", reunion_id=reunion_id))
-        
-    return render_template("seance.html", reunion=reunion_recup, errors=erreurs)
+    
+    conn   = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
+    reunion_rec  = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    return render_template("seance.html", reunion=reunion_rec, errors=erreurs)
 
 
 if __name__ == "__main__":
