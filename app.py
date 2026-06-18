@@ -188,13 +188,17 @@ def reunion(reunion_id):
     # Deuxième requête SELECT pour les présents
     cursor.execute("SELECT * FROM participants WHERE reunion_id=%s", (reunion_id,))
     presents = cursor.fetchall()
+    cursor.execute("SELECT interventions.id,interventions.contenu,interventions.date_intervention,participants.nom,participants.prenom,participants.fonction FROM    interventions JOIN    participants ON interventions.participant_id = participants.id WHERE   interventions.reunion_id = %s ORDER BY interventions.date_intervention ASC", (reunion_id,))
+    interventions = cursor.fetchall()
+
+
     cursor.close()
     conn.close()
 
     if reunion_recup is None:
         return render_template("404.html"), 404
 
-    return render_template("seance.html", reunion=reunion_recup, presents=presents)
+    return render_template("seance.html", reunion=reunion_recup, presents=presents, interventions=interventions)
 
 
 # ───────────────────────────────────────────────────────
@@ -264,8 +268,47 @@ def ajouter(reunion_id):
 # ROUTE 5 : Enregistrer une intervention
 # URL : GET /reunion/<id>
 # ───────────────────────────────────────────────────────
-# @app.route('/reunion/<int:reunion_id>/intervention', methods=["POST"])
-# def enregistrer(reunion_id):
+@app.route('/reunion/<int:reunion_id>/intervention', methods=["POST"])
+def enregistrer(reunion_id):
+    conn   = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM reunions WHERE id = %s", (reunion_id,))
+    reunion_rec  = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    erreurs = []
+
+     # Récupérer les données envoyées par le formulaire
+    participant_id = request.form.get("participant_id", "")
+    contenu        = request.form.get("contenu", "").strip()
+
+    if not participant_id:
+        erreurs.append("Le nom de l'intervenant est obligatoire.")
+    
+
+    if not contenu:
+        erreurs.append("Le contenu de l'intervention est obligatoire.")
+    elif len(contenu) < 150:
+        erreurs.append("L'intervention doit dépasser au moins 150 caractères.")
+
+    if not erreurs:
+        conn   = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO interventions (reunion_id, participant_id, contenu) VALUES (%s,%s,%s)",
+                       (reunion_id, participant_id, contenu)
+                       )
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("reunion", reunion_id=reunion_id))
+    
+
+    
+    return render_template("seance.html",reunion=reunion_rec, dioums=erreurs)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
