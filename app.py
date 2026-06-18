@@ -260,5 +260,12 @@ def ajouter(reunion_id):
     return render_template("seance.html", reunion=reunion_rec, errors=erreurs)
 
 
+# ───────────────────────────────────────────────────────
+# ROUTE 5 : Enregistrer une intervention
+# URL : GET /reunion/<id>
+# ───────────────────────────────────────────────────────
+# @app.route('/reunion/<int:reunion_id>/intervention', methods=["POST"])
+# def enregistrer(reunion_id):
+
 if __name__ == "__main__":
     app.run(debug=True)

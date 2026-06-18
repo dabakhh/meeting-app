@@ -20,114 +20,144 @@
         </div>
         
     </div>
+
 </div>
-<div class="col-md-8 col-lg-6 mt-5">
-
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 mt-5">
     
-    {% if presents %}
-    <div class="card shadow-sm">
-        <div class="card-header py-3">
-            <h4>Liste des présents</h4>
-        </div>
-        <ol class="mb-0 mt-2">
-            {% for present in presents %}
-            <li>{{ present.prenom }} {{ present.nom }}</li>
-            {% endfor %}
-        </ol>
-    </div>
-    {% else %}
-    <div class="alert alert-warning text-center py-5">
-        <h4>📭 Aucun participant à cette réunion</h4>
-        <p>Commencez par ajouter le président !</p>
-    </div>
-    
-    {% endif %}
-    
-    
-    <div class="card shadow-sm my-4">
         
-        <div class="card-header py-1">
-            <h4 class="text-center my-2">➕ Ajouter un participant</h4>
-        </div>
-        
-            <!-- ─── Affichage des erreurs de validation ─── -->
-            {% if errors %}
-            <div class="alert alert-danger">
-                <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
-                <ul class="mb-0 mt-2">
-                    {% for err in errors %}
-                    <li>{{ err }}</li>
-                    {% endfor %}
-                </ul>
+        {% if presents %}
+        <div class="card shadow-sm">
+            <div class="card-header py-3">
+                <h4>Liste des présents</h4>
             </div>
-            {% endif %}
+            <ol class="mb-0 mt-2">
+                {% for present in presents %}
+                <li>{{ present.prenom }} {{ present.nom }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center py-5">
+            <h4>📭 Aucun participant à cette réunion</h4>
+            <p>Commencez par ajouter le président !</p>
+        </div>
         
-            <form novalidate class="m-4" method="post" action="{{ url_for('ajouter', reunion_id=reunion.id) }}">
-            <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
-             <!-- Champ Nom présent -->
-                    <div class="mb-3">
-                        <label for="nom" class="form-label fw-semibold">
-                            Nom 
-                            <span class="text-danger">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="nom"
-                            name="nom"
-                            placeholder="Ex : Sanokho"       
-                            maxlength="150"
-                        >
-                        <!-- name="secretaire" DOIT correspondre exactement à request.form.get("secretaire") dans Flask -->
-                        <div class="form-text">Maximum 150 caractères</div>
-                    </div>
+        {% endif %}
         
-                    <!-- Champ prenom présent -->
-                    <div class="mb-3">
-                        <label for="prenom" class="form-label fw-semibold">
-                            Prénom
-                            <span class="text-danger">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="prenom"
-                            name="prenom"
-                            placeholder="Ex : Moustapha Mouhamed"       
-                            maxlength="150"
-                        >
-                        <!-- name="secretaire" DOIT correspondre exactement à request.form.get("secretaire") dans Flask -->
-                        <div class="form-text">Maximum 150 caractères</div>
-                    </div>
         
-                    <!-- Champ fonction présent -->
-                    <div class="mb-3">
-                        <label for="fonction" class="form-label fw-semibold">
-                            Fonction 
-                            <span class="text-muted fw-normal">(optionnel)</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="fonction"
-                            name="fonction"
-                            placeholder="Ex : Développeur Full Stack"
-                            maxlength="150"
-                        >
-                        <!-- name="president" DOIT correspondre exactement à request.form.get("president") dans Flask -->
-                        <div class="form-text">Maximum 150 caractères</div>
-                    </div>
-        
-                    <!-- Boutons d'action -->
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            💾 Enregistrer le participant
-                        </button>
-                    </div>
-            </form>
+        <div class="card shadow-sm my-4">
+            
+            <div class="card-header py-1">
+                <h4 class="text-center my-2">➕ Ajouter un participant</h4>
+            </div>
+            
+                <!-- ─── Affichage des erreurs de validation ─── -->
+                {% if errors %}
+                <div class="alert alert-danger">
+                    <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for err in errors %}
+                        <li>{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            
+                <form novalidate class="m-4" method="post" action="{{ url_for('ajouter', reunion_id=reunion.id) }}">
+                <!-- novalidate = désactiver la validation HTML5 native pour tester notre validation Python -->
+                 <!-- Champ Nom présent -->
+                        <div class="mb-3">
+                            <label for="nom" class="form-label fw-semibold">
+                                Nom 
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nom"
+                                name="nom"
+                                placeholder="Ex : Sanokho"       
+                                maxlength="150"
+                            >
+                            <!-- name="secretaire" DOIT correspondre exactement à request.form.get("secretaire") dans Flask -->
+                            <div class="form-text">Maximum 150 caractères</div>
+                        </div>
+            
+                        <!-- Champ prenom présent -->
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label fw-semibold">
+                                Prénom
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="prenom"
+                                name="prenom"
+                                placeholder="Ex : Moustapha Mouhamed"       
+                                maxlength="150"
+                            >
+                            <!-- name="secretaire" DOIT correspondre exactement à request.form.get("secretaire") dans Flask -->
+                            <div class="form-text">Maximum 150 caractères</div>
+                        </div>
+            
+                        <!-- Champ fonction présent -->
+                        <div class="mb-3">
+                            <label for="fonction" class="form-label fw-semibold">
+                                Fonction 
+                                <span class="text-muted fw-normal">(optionnel)</span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="fonction"
+                                name="fonction"
+                                placeholder="Ex : Développeur Full Stack"
+                                maxlength="150"
+                            >
+                            <!-- name="president" DOIT correspondre exactement à request.form.get("president") dans Flask -->
+                            <div class="form-text">Maximum 150 caractères</div>
+                        </div>
+            
+                        <!-- Boutons d'action -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                💾 Enregistrer le participant
+                            </button>
+                        </div>
+                </form>
+        </div>
+    
+         
     </div>
 
-     
+    <div class="col-md-8 col-lg-6 mt-5">
+        <form  novalidate method="post" action="">
+            <!-- Sélecteur : qui prend la parole -->
+            <label for="participant_id" class="form-label fw-semibold">Qui prend la parole ?</label>
+            <select name="participant_id" id="participant_id" class="form-select mb-3" required>
+                <option value="">-- Choisir un présent --</option>
+                {% for p in participants %}
+                    <option value="{{ p.id }}">{{ p.prenom }} {{ p.nom }} ({{ p.fonction }})</option>
+                {% endfor %}
+            </select>
+
+            <!-- Boutons d'enregistrement vocal -->
+            <div class="mb-2">
+                <button type="button" id="btn-start" class="btn btn-danger">🎤 Démarrer</button>
+                <button type="button" id="btn-stop"  class="btn btn-secondary" disabled>⏹ Arrêter</button>
+                <span id="statut-audio" class="ms-2 text-muted">Prêt</span>
+            </div>
+
+            <!-- Zone de transcription -- auto-remplie, mais modifiable à la main -->
+            <label for="transcription" class="form-label fw-semibold">Transcription de l'intervention</label>
+            <textarea name="contenu" id="transcription" class="form-control mb-3" rows="5"
+                    placeholder="Le texte dicté apparaîtra ici... vous pouvez le corriger." required></textarea>
+        </form>
+        <script src="{{ url_for('static', filename='audio.js') }}"></script>
+    </div>
+
 </div>
 
 {% endblock %}
