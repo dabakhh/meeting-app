@@ -309,6 +309,21 @@ def enregistrer(reunion_id):
     
     return render_template("seance.html",reunion=reunion_rec, dioums=erreurs)
 
+# ───────────────────────────────────────────────────────
+# ROUTE 6 : Clôturer la réunion (UPDATE statut)
+# URL : GET ou POST /reunion/<id>/terminer
+# ───────────────────────────────────────────────────────
+@app.route("/reunion/<int:reunion_id>/terminer", methods=["GET", "POST"])
+def terminer(reunion_id):
+    if request.method == "POST":
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE reunions SET statut='terminée' WHERE id=%s", (reunion_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("reunion", reunion_id=reunion_id))
 
 if __name__ == "__main__":
     app.run(debug=True)
