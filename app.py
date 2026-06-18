@@ -325,5 +325,26 @@ def terminer(reunion_id):
 
         return redirect(url_for("reunion", reunion_id=reunion_id))
 
+# ───────────────────────────────────────────────────────
+# ROUTE 7 : Afficher le procès-verbal
+# URL : GET /reunion/<id>/pv
+# ───────────────────────────────────────────────────────
+@app.route("/reunion/<int:reunion_id>/pv")
+def pv(reunion_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM reunions WHERE id=%s", (reunion_id,))
+    reunion = cursor.fetchone()
+    # Deuxième requête SELECT pour les présents
+    cursor.execute("SELECT * FROM participants WHERE reunion_id=%s", (reunion_id,))
+    presents = cursor.fetchall()
+    cursor.execute("SELECT interventions.id,interventions.contenu,interventions.date_intervention,participants.nom,participants.prenom,participants.fonction FROM    interventions JOIN    participants ON interventions.participant_id = participants.id WHERE   interventions.reunion_id = %s ORDER BY interventions.date_intervention ASC", (reunion_id,))
+    interventions = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template("pv.html", dadjer=reunion, gniteew=presents, kaddu=interventions)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

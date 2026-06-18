@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block titre %}{{ dadjer.titre }}{% endblock %}
+
+{% block contenu %}
+
+    <!-- ENTÊTE -->
+    <header>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                
+                <!-- Bouton retour en haut -->
+                <a href="{{ url_for('accueil') }}" class="btn btn-outline-secondary mb-4">
+                    ← Retour à la liste
+                </a>
+                
+                <!-- Carte de détail de la réunion -->
+                <div class="card shadow-sm">
+                    <div class="card-header py-3">
+                        <h4 class="mb-0 text-center">📘 {{ dadjer.titre }} ({{ dadjer.date_reunion }}) <br> {{ dadjer.lieu }} <br>  Réunion {{ dadjer.type_reunion }}</h4>
+                    </div>
+
+                    
+                </div>
+                
+            </div>
+            <div class="d-grid gap-2 my-3 card shadow-sm">
+                <p class="p-2">Début : {{ dadjer.heure_debut }}</p>
+                <ul>
+                    <li>Secrétaire: {{ dadjer.secretaire }}</li>
+                    <li>Président: {{ dadjer.president }}</li>
+                    <li>Ordre du jour: {{ dadjer.ordre_du_jour }}</li>
+                </ul>
+
+                <!-- LISTE DES PRESENTS -->
+            <div class="card shadow-sm my-4">
+                <div class="card-header py-1">
+                    <h4 class="text-center my-2">Liste des présents</h4>
+                </div>
+                <ul class="m-3">
+                    {% for p in gniteew %}
+                    <li>{{ p.prenom}} {{ p.prenom}}
+                        {% if p.fonction %}
+                            ({{ p.fonction }})
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            
+            <!-- DEROULE DES INTERVENTIONS -->
+            <div class="card shadow-sm my-4">
+            <div class="card-header py-1">
+                <h4 class="text-center my-2">DEROULER DES INTERVENTIONS</h4>
+            </div>
+                
+
+            {% if kaddu %}
+                        <ol class="m-3">
+                            {% for parole in kaddu %}
+                                <li>{{ parole.prenom }} {{ parole.nom }} : « {{ parole.contenu }} »</li>
+                            {% endfor %}
+                        </ol>
+                       
+                    {% else %}
+                        <div class="alert alert-warning text-center py-5">
+                            <h4>📭 Aucune intervention à cette réunion</h4>
+                            <p>Commencez par ajouter la première</p>
+                        </div>
+                        
+            {% endif %}
+            </div>
+            
+            <!-- STATUT DE LA REUNION -->
+            <div class="card shadow-sm my-4">
+            <div class="card-header py-1">
+                <h4 class="text-center my-2">STATUT DE LA REUNION</h4>
+            </div>
+            
+                {% if dadjer.statut=='en cours' %}
+                    <span class="card bg-warning m-3 text-2"> →En cours</span>
+                {% else %}
+                    <span class="card bg-danger m-3">✓ Terminée</span>
+                {% endif %}       
+                
+
+            </div>
+        </div>
+    </header>
+ {% endblock %}
